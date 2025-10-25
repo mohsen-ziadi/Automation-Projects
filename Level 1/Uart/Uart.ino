@@ -14,22 +14,18 @@ bool lastRedState = HIGH;
 bool lastGreenState = HIGH;
 bool lastBlueState = HIGH;
 
-String inputCommand = "";  
+String inputCommand = "";
 
 void setup() {
   Serial.begin(115200);
   pinMode(redButton, INPUT_PULLUP);
   pinMode(greenButton, INPUT_PULLUP);
   pinMode(blueButton, INPUT_PULLUP);
-
   pinMode(redLed, OUTPUT);
   pinMode(greenLed, OUTPUT);
   pinMode(blueLed, OUTPUT);
-
-  Off(); 
-
-  Serial.println("ESP32 ready for UART commands...");
-  Serial.println("Type RED / GREEN / BLUE / OFF in terminal and press Enter");
+  Off();
+  Serial.println("READY");
 }
 
 void OnRed() {
@@ -63,7 +59,6 @@ void Off() {
 void handleCommand(String cmd) {
   cmd.trim();
   cmd.toUpperCase();
-
   if (cmd == "RED") OnRed();
   else if (cmd == "GREEN") OnGreen();
   else if (cmd == "BLUE") OnBlue();
@@ -83,7 +78,6 @@ void loop() {
   bool blueState = digitalRead(blueButton);
 
   if (redState == LOW && lastRedState == HIGH) {
-    Serial.println("BUTTON RED PRESSED");
     redCount++;
     if (redCount % 2 == 1) {
       OnRed();
@@ -93,7 +87,6 @@ void loop() {
   }
 
   if (greenState == LOW && lastGreenState == HIGH) {
-    Serial.println("BUTTON GREEN PRESSED");
     greenCount++;
     if (greenCount % 2 == 1) {
       OnGreen();
@@ -103,7 +96,6 @@ void loop() {
   }
 
   if (blueState == LOW && lastBlueState == HIGH) {
-    Serial.println("BUTTON BLUE PRESSED");
     blueCount++;
     if (blueCount % 2 == 1) {
       OnBlue();
@@ -116,7 +108,6 @@ void loop() {
   lastGreenState = greenState;
   lastBlueState = blueState;
 
-  // --- UART command ---
   if (Serial.available()) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
